@@ -13,7 +13,7 @@
 
 .result-image {
     position: absolute;
-    top: 225px;
+    top: 80px;
     z-index: -1;
 }
 
@@ -35,4 +35,29 @@
     line-height: 90px;
     font-family: "Museo Sans Cyrl Bold", sans-serif;
     color: #FFFFFF;
+}
+
+.correct-answers {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 80px;
+}
+
+.correct-answers  a {
+    font-size: 17px;
+    line-height: 22px;
+    color: #6933DC;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+
+}
+
+.correct-answers  a:hover {
+    text-decoration: underline;
+}
+
+.correct-answers  a img {
+    margin-left: 13px;
 }

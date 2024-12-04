@@ -19,7 +19,10 @@
                 xhr.send();
                 if (xhr.status === 200 && xhr.responseText) {
                     try {
+                        const answers = [];
                         this.quiz = JSON.parse(xhr.responseText);
+                        answers.push(this.quiz);
+                        sessionStorage.setItem('answers', JSON.stringify(answers));
                     } catch (e) {
                         location.href = 'index.html';
                     }
@@ -158,6 +161,7 @@
                     questionId: activeQuestion.id,
                     chosenAnswerId: chosenAnswerId
                 })
+                sessionStorage.setItem('user-answers', JSON.stringify(this.userResult));
             }
 
             console.log(this.userResult);

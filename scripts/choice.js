@@ -3,6 +3,16 @@
         quizzes: [],
         init() {
             checkUserData();
+            const url = new URL(location.href);
+            const infoUserArr = [];
+            const testUserName = url.searchParams.get('name');
+            const testUserLastName = url.searchParams.get('lastName');
+            const testEmail = url.searchParams.get('email');
+            if (testUserName && testUserLastName && testEmail) {
+                infoUserArr.push(testUserName, testUserLastName, testEmail);
+            }
+            sessionStorage.setItem('user', JSON.stringify(infoUserArr));
+
 
             const xhr = new XMLHttpRequest();
             xhr.open('GET', 'https://testologia.ru/get-quizzes', false);
