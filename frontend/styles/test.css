@@ -64,7 +64,7 @@
 /*}*/
 
 .test-time-clock {
-    background-image: url("../images/time.png");
+    background-image: url("/images/time.png");
     background-size: cover;
     background-position: center;
     height: 29px;

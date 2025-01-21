@@ -9,11 +9,11 @@ a {
 }
 
 @font-face {
-    src: url("../fonts/Museo Sans Cyrl 500.ttf");
+    src: url("/fonts/Museo Sans Cyrl 500.ttf");
     font-family: "Museo Sans Cyrl";
 }
 @font-face {
-    src: url("../fonts/Museo Sans Cyrl 700.ttf");
+    src: url("/fonts/Museo Sans Cyrl 700.ttf");
     font-family: "Museo Sans Cyrl Bold";
 }
 
