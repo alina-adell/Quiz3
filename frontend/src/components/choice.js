@@ -1,28 +1,26 @@
 import {UrlManager} from "../utils/url-manager.js";
+import {CustomHttp} from "../services/custom-http.js";
 
 export class Choice {
     constructor() {
         this.quizzes = [];
         this.routeParams = UrlManager.getQueryParams();
-        UrlManager.checkUserData(this.routeParams);
 
-        // const infoUserArr = [];
-        // sessionStorage.setItem('user', JSON.stringify(infoUserArr));
+        this.init();
+    }
 
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', 'https://testologia.ru/get-quizzes', false);
-        xhr.send();
-
-        if (xhr.status === 200 && xhr.responseText) {
-            try {
-                this.quizzes = JSON.parse(xhr.responseText);
-            } catch (e) {
-                location.href = '#/';
+    async init() {
+        try {
+            const result = await CustomHttp.request('http://localhost:3000/api/tests');
+            if (result) {
+                if (result.error) {
+                    throw new Error(result.message);
+                }
+                this.quizzes = result;
+                this.processQuizzes();
             }
-            this.processQuizzes();
-        } else {
-            location.href = '#/';
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -62,7 +60,7 @@ export class Choice {
         const dataId = element.getAttribute('data-id');
         if (dataId) {
             location.href = '#/test?name=' + this.routeParams.name + '&lastName=' + this.routeParams.lastName +
-                '&email='+ this.routeParams.email + '&id=' + dataId;
+                '&email=' + this.routeParams.email + '&id=' + dataId;
         }
     }
 }

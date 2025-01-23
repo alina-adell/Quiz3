@@ -1,23 +1,13 @@
+
+import {CustomHttp} from "../services/custom-http.js";
+
 export class Form {
-    constructor() {
+    constructor(page) {
         this.agreeElement = null;
         this.processElement = null;
+        this.page = page;
+
         this.fields = [
-            {
-                name: 'name',
-                id: 'name',
-                element: null,
-                regex: /^[А-Я][а-я]+\s*$/,
-                valid: false,
-                // erorr  или errors если хотим хранить массив ошиьбок
-            },
-            {
-                name: 'lastName',
-                id: 'last-name',
-                element: null,
-                regex: /^[А-Я][а-я]+\s*$/,
-                valid: false,
-            },
             {
                 name: 'email',
                 id: 'email',
@@ -25,10 +15,36 @@ export class Form {
                 regex: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
                 valid: false,
             },
+            {
+                name: 'password',
+                id: 'password',
+                element: null,
+                regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+                valid: false,
+            },
         ];
+
+        if (this.page === 'signup') {
+            this.fields.unshift(
+                {
+                    name: 'name',
+                    id: 'name',
+                    element: null,
+                    regex: /^[А-Я][а-я]+\s*$/,
+                    valid: false,
+                },
+                {
+                    name: 'lastName',
+                    id: 'last-name',
+                    element: null,
+                    regex: /^[А-Я][а-я]+\s*$/,
+                    valid: false,
+                });
+        }
         const that = this;
         this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
+            item.element = document.getElementById(item.id)
+
             item.element.onchange = function () {
                 that.validateField.call(that, item, this)
             }
@@ -37,12 +53,13 @@ export class Form {
         this.processElement = document.getElementById('process');
         this.processElement.onclick = function () {
             that.processForm();
-
         }
 
-        this.agreeElement = document.getElementById('agree');
-        this.agreeElement.onchange = function () {
-            that.validateForm();
+        if (this.page === 'signup') {
+            this.agreeElement = document.getElementById('agree');
+            this.agreeElement.onchange = function () {
+                that.validateForm();
+            }
         }
     }
 
@@ -55,12 +72,11 @@ export class Form {
             field.valid = true;
         }
         this.validateForm();
-
     }
 
     validateForm() {
         const validForm = this.fields.every(item => item.valid);
-        const isValid = this.agreeElement.checked && validForm;
+        const isValid = this.agreeElement ? this.agreeElement.checked && validForm : validForm;
         if (isValid) {
             this.processElement.removeAttribute('disabled');
         } else {
@@ -69,15 +85,33 @@ export class Form {
         return isValid;
     }
 
-    processForm() {
+    async processForm() {
         if (this.validateForm()) {
-            let paramString = '';
+            if (this.page === 'signup') {
 
-            this.fields.forEach(item => {
-                paramString += (!paramString ? '?' : '&') + item.name + '=' + item.element.value;
+                try {
 
-            })
-            location.href = '#/choice' + paramString;
+                    const result = await CustomHttp.request('http://localhost:3000/api/signup',
+                        'POST', {
+                        name: this.fields.find(item => item.name === 'name').element.value,
+                        lastname: this.fields.find(item => item.name === 'lastname').element.value,
+                        email: this.fields.find(item => item.name === 'email').element.value,
+                        password: this.fields.find(item => item.name === 'password').element.value,
+                    });
+                    console.log(result + 'Это реузльтат')
+                    if (result) {
+                        if (result.error || !result.user) {
+                            throw new Error(result.message);
+                        }
+                        location.href = '#/choice';
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+
+            } else {
+
+            }
         }
     }
 }
