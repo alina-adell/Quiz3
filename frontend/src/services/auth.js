@@ -4,6 +4,8 @@ export class Auth {
     static accessTokenKey = 'accessToken';
     static refreshTokenKey = 'refreshToken';
     static userInfoKey = 'userInfo';
+    static userEmailKey = 'userEmail';
+
 
     static async processUnauthorizedResponse() {
         const refreshToken = localStorage.getItem(this.refreshTokenKey);
@@ -73,5 +75,15 @@ export class Auth {
         }
 
         return null;
+    }
+    static setUserEmail(email) {
+        localStorage.setItem(this.userEmailKey, JSON.stringify(email));
+    }
+
+    static getUserEmail() {
+        const userEmail = localStorage.getItem(this.userEmailKey);
+        if (userEmail) {
+            return JSON.parse(userEmail);
+        }
     }
 }

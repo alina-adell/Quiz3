@@ -69,7 +69,7 @@ export class Router {
             },
             {
                 route: '#/answers',
-                title: 'Вопросы',
+                title: 'Правильные ответы',
                 template: 'templates/answers.html',
                 styles: 'styles/answers.css',
                 load: () => {
@@ -99,6 +99,7 @@ export class Router {
         this.stylesElement.setAttribute('href', newRoute.styles);
         this.titleElement.innerText = newRoute.title;
 
+        //Получаем информацию о пользователе и проверяем токен
         const userInfo = Auth.getUserInfo();
         const accessToken = localStorage.getItem(Auth.accessTokenKey);
         if (userInfo && accessToken) {

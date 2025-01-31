@@ -112,6 +112,8 @@ export class Form {
                         if (result.error || !result.user) {
                             throw new Error(result.message);
                         }
+                        //Сохранение email в local Storage
+                        // Auth.setUserEmail(result.user.email);
                     }
                 } catch (error) {
                     return console.log(error);
@@ -134,6 +136,7 @@ export class Form {
                         fullName: result.fullName,
                         userId: result.userId,
                     })
+                    Auth.setUserEmail(email);
                     location.href = '#/choice';
                 }
             } catch (error) {

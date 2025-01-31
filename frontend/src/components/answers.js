@@ -1,103 +1,112 @@
+"use strict";
+
+import {Auth} from "../services/auth.js";
+import {UrlManager} from "../utils/url-manager.js";
+import {CustomHttp} from "../services/custom-http.js";
+import config from "../../config/config.js";
+
 export class Answers {
-    constructor() {
+    constructor () {
+        this.routeParams = UrlManager.getQueryParams();
+        this.result = null;
         this.nameTest = null;
+        this.spanUserText = null;
         this.answersBox = null;
-        this.answers = null;
         this.backResultText = null;
-        const savedAnswers = sessionStorage.getItem('answers');
-        if (savedAnswers) {
-            this.answers = JSON.parse(savedAnswers);
-        } else {
-            alert('Данные отсутствуют');
-        }
-        const userAnswerData = sessionStorage.getItem('user-answers');
+
+        this.init();
+        this.backLocation();
+    }
+
+    async init () {
+
         this.nameTest = document.querySelector('.answers-questions-text');
         this.answersBox = document.getElementById('answers-box');
 
         this.showUser();
-        if (savedAnswers) {
-            this.answers = JSON.parse(savedAnswers).forEach(test => {
-                this.nameTest.innerText = test.name;
 
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", 'https://testologia.ru/get-quiz-right?id=' + test.id, false);
-                xhr.send();
-                let serverAnswers = null;
-                if (xhr.status === 200 && xhr.responseText) {
-                    serverAnswers = JSON.parse(xhr.responseText);
+        //Запрос теста по id
+        try {
+            const result = await CustomHttp.request(config.host + '/tests/' + this.routeParams.id + '/result/details?userId=' + this.routeParams.userId);
+
+            if (result) {
+                if (result.error) {
+                    throw new Error(result.error);
                 }
 
-                test.questions.forEach((question, index) => {
-                    question.id = index + 1;
-                    const questionBox = document.createElement('div');
-                    const questionTitle = document.createElement('div');
-                    questionTitle.innerHTML = '<span>Вопрос ' + question.id + ':</span> ' + question.question;
-                    questionTitle.className = 'answers-title';
-                    const answerBox = document.createElement('ul');
-                    answerBox.className = 'answer-question-options';
-                    questionBox.append(questionTitle, answerBox);
-
-
-                    question.answers.forEach((answers) => {
-                        const answerElement = document.createElement('li');
-                        answerElement.className = 'answer-option';
-
-                        const inputId = 'answer-' + answers.id;
-                        const inputElement = document.createElement('input');
-                        inputElement.className = 'option-answer';
-                        inputElement.setAttribute('id', inputId);
-                        inputElement.setAttribute('type', 'radio');
-                        inputElement.setAttribute('name', 'answer' + question.id);
-                        inputElement.setAttribute('value', answers.id);
-                        inputElement.setAttribute('disabled', 'disabled');
-
-                        const labelElement = document.createElement('label');
-                        labelElement.setAttribute('for', inputId);
-                        labelElement.innerText = answers.answer;
-
-                        //Получение данных о выбранных ответах
-                        let userAnswers = null;
-                        if (userAnswerData) {
-                            userAnswers = JSON.parse(userAnswerData).find((item, index) => {
-                                item.questionId = (index + 1);
-                                return item.questionId === question.id;
-                            });
-                        }
-
-                        //Сравнение ответов пользователя и ответов теста
-                        if (userAnswers && userAnswers.chosenAnswerId === answers.id) {
-                            //Проверка совпадений ответов и применение стилей
-                            if (serverAnswers.includes(answers.id)) {
-                                inputElement.classList.add('correct-answer');
-                                labelElement.classList.add('correct-answer-text');
-                            } else {
-                                inputElement.classList.add('incorrect-answer');
-                                labelElement.classList.add('incorrect-answer-text');
-                            }
-                        }
-
-                        answerElement.append(inputElement, labelElement);
-                        answerBox.appendChild(answerElement);
-                        questionBox.appendChild(answerBox);
-                    });
-                    this.answersBox.append(questionBox);
-                });
-            });
-        } else {
-            alert('Данные для отображения правильных ответов отсутствуют. Пожалуйста, вернитесь к результатам теста.');
-
+                this.result = result;
+                console.log('result', result);
+                console.log('result', result.test.questions);
+                this.nameTest.innerText = result.test.name;
+            }
+        } catch (error) {
+            return console.log(error);
         }
+
+        console.log(this.result);
+        this.result.test.questions.forEach((question, index) => {
+            question.id = index + 1;
+            const questionBox = document.createElement('div');
+            const questionTitle = document.createElement('h2');
+            questionTitle.innerHTML = '<span>Вопрос ' + question.id +':</span> ' + question.question;
+            questionTitle.className = 'test-question-title answers-title';
+            const answerBox = document.createElement('ul');
+            answerBox.className = 'answer-question-options';
+            questionBox.append(questionTitle, answerBox);
+
+            question.answers.forEach((answer) => {
+                const answerElement = document.createElement('li');
+                answerElement.className = 'test-question-option';
+
+                const inputId = 'answer-' + answer.id;
+                const inputElement = document.createElement('input');
+                inputElement.className = 'option-answer';
+                inputElement.setAttribute('id', inputId);
+                inputElement.setAttribute('type', 'radio');
+                inputElement.setAttribute('name', 'answer' + question.id);
+                inputElement.setAttribute('value', answer.id);
+                inputElement.setAttribute('disabled', 'disabled');
+
+                const labelElement = document.createElement('label');
+                labelElement.setAttribute('for', inputId);
+                labelElement.innerText = answer.answer;
+
+                answerElement.append(inputElement, labelElement);
+                answerBox.appendChild(answerElement);
+                questionBox.appendChild(answerBox);
+
+                //По значению флага correct добавляем стили к выбранным пользователем вопросам
+                if (answer.correct === true) {
+                    inputElement.classList.add('correct-answer');
+                    labelElement.classList.add('correct-answer-text');
+                } else if (answer.correct === false) {
+                    inputElement.classList.add('incorrect-answer');
+                    labelElement.classList.add('incorrect-answer-text');
+                }
+            });
+
+            this.answersBox.append(questionBox);
+        });
+
+    }
+
+    backLocation() {
         this.backResultText = document.getElementById('back-result').onclick = function () {
             window.history.back();
         }
     }
+
     showUser() {
         //Показ на странице имени, фамилии и email
-        const userInfo = sessionStorage.getItem('user');
-        const spanUserText = document.getElementById('user-text');
-        if (userInfo) {
-            let arr = JSON.parse(userInfo)
-            spanUserText.innerText = arr[0] + " " + arr[1] + ", " + arr[2];
+        const userEmail = Auth.getUserEmail();
+        const userFullName = Auth.getUserInfo();
+
+        this.spanUserText = document.getElementById('user-text');
+        if (userEmail && userFullName && userFullName.fullName) {
+            this.spanUserText.innerText = `${userFullName.fullName}, ${userEmail}`;
+        } else {
+            console.error("User data is missing or incomplete");
+            this.spanUserText.innerText = 'Данные пользователя отсутствуют';
         }
     }
 }

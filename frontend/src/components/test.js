@@ -1,5 +1,5 @@
 import {UrlManager} from "../utils/url-manager.js";
-import {CustomHttp} from "../services/custom-http";
+import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {Auth} from "../services/auth.js";
 
@@ -196,7 +196,7 @@ export class Test {
 
         this.showQuestion();
     }
-
+    //Завершение теста и получение результатов с сервера
     async complete() {
         const userInfo = Auth.getUserInfo();
         if (!userInfo) {
