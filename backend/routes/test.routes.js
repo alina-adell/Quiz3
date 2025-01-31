@@ -1,4 +1,4 @@
-const TestController = require('../controllers/test.controller');
+const TestController = require('../controllers/test.controller.js');
 const MiddlewareUtils = require('../utils/middleware.utils');
 const express = require('express');
 const router = express.Router();
