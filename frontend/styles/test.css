@@ -139,10 +139,10 @@ input[type="radio"]:checked::before {
     content: "";
     z-index: -1;
     position: absolute;
-    width: 184px;
+    width: 194px;
     background: #DCDCF3;
     height: 6px;
-    left: 28px;
+    left: 35px;
     top: 10px;
 }
 
