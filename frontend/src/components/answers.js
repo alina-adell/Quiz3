@@ -43,7 +43,7 @@ export class Answers {
             return console.log(error);
         }
 
-        // console.log(this.result);
+        console.log(this.result);
         this.result.test.questions.forEach((question, index) => {
             question.id = index + 1;
             const questionBox = document.createElement('div');

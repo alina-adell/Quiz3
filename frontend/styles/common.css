@@ -126,19 +126,3 @@ a.button {
     font-size: 12px;
     line-height: 12px;
 }
-
-.test-question-options {
-    margin-top: 58px;
-    min-height: 344px;
-}
-
-.test-question-option {
-    font-size: 20px;
-    line-height: 24px;
-    margin-bottom: 20px;
-    display: flex;
-}
-.test-question-option label {
-    cursor: pointer;
-}
-
