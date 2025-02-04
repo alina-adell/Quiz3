@@ -26,21 +26,6 @@
     color: #6933DC;
 }
 
-.test-question-options {
-    margin-top: 58px;
-    min-height: 344px;
-}
-
-.test-question-option {
-    font-size: 20px;
-    line-height: 24px;
-    margin-bottom: 20px;
-    display: flex;
-}
-
-.test-question-option label {
-    cursor: pointer;
-}
 
 .test-actions {
     display: flex;
@@ -139,10 +124,10 @@ input[type="radio"]:checked::before {
     content: "";
     z-index: -1;
     position: absolute;
-    width: 194px;
+    width: 184px;
     background: #DCDCF3;
     height: 6px;
-    left: 35px;
+    left: 28px;
     top: 10px;
 }
 
