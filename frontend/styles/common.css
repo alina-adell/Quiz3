@@ -126,3 +126,31 @@ a.button {
     font-size: 12px;
     line-height: 12px;
 }
+
+.test-question-title {
+    font-family: "Museo Sans Cyrl Bold", sans-serif;
+    font-size: 36px;
+    line-height: 43px;
+}
+
+.test-question-title span {
+    color: rgb(105, 51, 220);
+}
+
+.test-question-options {
+    list-style-type: none;
+    min-height: 344px;
+    margin-top: 58px;
+    padding: 0;
+}
+
+.test-question-option {
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.test-question-option label {
+    cursor: pointer;
+}

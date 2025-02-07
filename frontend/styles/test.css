@@ -15,32 +15,6 @@
     display: flex;
 }
 
-.test-question-title {
-    font-size: 36px;
-    line-height: 43px;
-    font-family: "Museo Sans Cyrl Bold", sans-serif;
-
-}
-
-.test-question-title span {
-    color: #6933DC;
-}
-
-.test-question-options {
-    margin-top: 58px;
-    min-height: 344px;
-}
-
-.test-question-option {
-    font-size: 20px;
-    line-height: 24px;
-    margin-bottom: 20px;
-    display: flex;
-}
-
-.test-question-option label {
-    cursor: pointer;
-}
 
 .test-actions {
     display: flex;
@@ -139,11 +113,11 @@ input[type="radio"]:checked::before {
     content: "";
     z-index: -1;
     position: absolute;
-    width: 194px;
-    background: #DCDCF3;
+    width: 184px;
     height: 6px;
-    left: 35px;
+    background-color: rgb(220, 220, 243);
     top: 10px;
+    left: 28px;
 }
 
 .test-progress-bar-item.complete:not(:last-child)::before {

@@ -33,7 +33,7 @@ export class Result {
                     }
                     document.getElementById('result-score').innerText = result.score + '/' + result.total;
                     return;
-                }
+                }св
             } catch (error) {
                 console.log(error);
             }

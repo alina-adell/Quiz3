@@ -76,7 +76,7 @@ export class Test {
 
     prepareProgressBar() {
         for(let i = 0; i < this.quiz.questions.length; i++) {
-            const itemElement = document.createElement('figure');
+            const itemElement = document.createElement('div');
             itemElement.className = 'test-progress-bar-item ' + (i === 0 ? 'active' : '');
             const itemCircleElement = document.createElement('div');
             itemCircleElement.className = 'test-progress-bar-item-circle';
